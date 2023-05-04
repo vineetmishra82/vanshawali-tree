@@ -9,7 +9,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-organizational-chart": "^2.2.1",
+    "react-router-dom": "^6.11.0",
     "react-scripts": "5.0.1",
+    "react-search-autocomplete": "^8.5.2",
     "reactjs-popup": "^2.0.5",
     "styled-components": "^5.3.9",
     "web-vitals": "^2.1.4"

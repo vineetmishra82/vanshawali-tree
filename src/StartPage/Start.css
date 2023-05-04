@@ -1,0 +1,64 @@
+body{
+    background-color: rgb(255, 247, 247);
+}
+
+#topHead{
+    margin-left: 40%;
+}
+
+#introText{
+    width: 70%;
+    margin-left: 10%;
+    text-align:center;
+}
+
+#btnsDiv{
+    margin-left: 40%;
+    margin-top: 5%;
+}
+
+.css-button-fully-rounded--red {
+    min-width: 130px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid #d90429;
+    background: #d90429;
+  }
+  .css-button-fully-rounded--red:hover {
+    background: #fff;
+    color: #d90429
+  }
+
+  .css-button-fully-rounded--blue {
+    min-width: 130px;
+    height: 40px;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid #2c0b8e;
+    background: #2c0b8e;
+  }
+  .css-button-fully-rounded--blue:hover {
+    background: #fff;
+    color: #2c0b8e
+  }
+
+  .dropdownBox{
+    margin-top: 5%;
+  }
+
+  

@@ -1,18 +1,28 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState}  from "react";
 import { Tree,TreeNode } from "react-organizational-chart";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import styled from "styled-components";
-import Popup from 'reactjs-popup';
+import './Home.css';
+
 
 const HomePage = () => {
   const[vanshawali,setVanshawali] = useState([{}]);
-  
+  const[firstLoad,setFirstLoad] = useState(true); 
+  const[searchPerson,setSearchPerson] = useState(null);
   useEffect(() => {
 
     getVanshwali();
+    scrollToCenter(firstLoad)
 
-  }, [{}]);
+    window.addEventListener('scroll',stopAutoScroll);
+    var mar =  (document.getElementById("mainDiv").scrollWidth/2.5).toString();
+    document.getElementById("searchBox").style.marginLeft =  mar+"px";
+   
+ },[vanshawali,firstLoad]);
 
+ 
   const getVanshwali = () => {
+
     try {
         fetch("https://vanshawali-apis.onrender.com/getEveryone")
             .then((response) => {
@@ -27,14 +37,26 @@ const HomePage = () => {
         console.log(e);
     }
 
-    
-
   };
 
+  const scrollToCenter = ((value) =>{
+     
+    if(value)
+    {
+      window.scrollTo({
+        left: document.getElementById("mainDiv").scrollWidth/2.5,
+        behavior: 'smooth'
+      });
+
+     
+     
+    }
+   
+   
+  });
   const processName = (element) => {
 
     var name = "";
-    console.log(element);
     if(element.isLiving=== "No")
     {
         name += "स्वo ";
@@ -63,8 +85,7 @@ const HomePage = () => {
     var rel = `${element.nearestRelative}`;
 
       var values = rel.split("id - ");
-      console.log(values[1]);
-  
+      
       return values[1];
     }
 
@@ -76,7 +97,7 @@ const HomePage = () => {
       var eleId = getParentId(element);
      if(eleId === id && element.relationship==="Father")
       {
-        comp[i] = <TreeNode label={getLabelOfNode(element)} >
+        comp[i] = <TreeNode className={"StyledNode "+element.vyaktiId} label={getLabelOfNode(element)} >
            {CheckIfElementHasChildren(element.vyaktiId)}
         </TreeNode>
         i++
@@ -106,10 +127,10 @@ const HomePage = () => {
 
     if(element.relationship === "Father")
     {
-        return "पिता - "+values[0];
+        return " पिता - "+values[0];
     }
     else if(element.relationship === "Sibling"){
-        return "सहोदर - "+values[0];
+        return " सहोदर - "+values[0];
     }
     else{
         return "";
@@ -127,7 +148,7 @@ const HomePage = () => {
 
           if(element.first)
           {
-            node = <TreeNode label={getLabelOfNode(element)} >
+            node = <TreeNode className="StyledNode" label={getLabelOfNode(element)}  >
 
             {CheckIfElementHasChildren(element.vyaktiId)}
 
@@ -147,7 +168,7 @@ const HomePage = () => {
       </>
      
     )
-    
+   
        
     }
 
@@ -159,21 +180,83 @@ const HomePage = () => {
     )
   };
 
+  const stopAutoScroll = () => {
+
+    console.log("scroll event");
+    setFirstLoad(false);
+  }
+
+  const formatResult = (item) => {
+    return (
+      <>
+        <span style={{ display: 'block', textAlign: 'left' }}>{item.name+ getRelationShipName(item)}</span>
+      </>
+    )
+  }
+
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    console.log(string, results)
+    
+  }
+
+  const handleOnHover = (result) => {
+    // the item hovered
+    console.log(result)
+  }
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    console.log(item)
+  
+    if(searchPerson!=null)
+    {
+      searchPerson.style.background = 'transparent';
+        
+    }
+
+    setSearchPerson(null);
+    var person = document.getElementsByClassName(item.vyaktiId);
+    console.log("person size is "+person.length);
+    console.log(person[0]);
+    person[0].scrollIntoView( { behavior: 'smooth', block: 'center' } );
+    person[0].style.background = 'yellow';
+    setSearchPerson(person[0]);   
+    
+  }
+
+  const handleOnFocus = () => {
+    console.log('Focused')
+  }
+
+  
   const StyledNode = styled.div`
   padding: 5px;
   border-radius: 8px;
   display: inline-block;
-  border: 1px solid red;
+  border: 2px solid red;
+    
 `;
 
    return(
-     <div>
+     <div id="mainDiv" >
+      <div id="searchBox">
+      <ReactSearchAutocomplete items={vanshawali} 
+     formatResult={formatResult}
+     onSearch={handleOnSearch}
+            onHover={handleOnHover}
+            onSelect={handleOnSelect}
+             />
+      </div>
+     
 <Tree
     lineWidth={'2px'}
-    lineColor={'green'}
+    lineColor={'darkgreen'}
     lineBorderRadius={'10px'}
-    label={<StyledNode>छतहार वंश</StyledNode>}
+    label={<StyledNode className="StyledNode">छतहार वंश</StyledNode>}
     id = "base"
+   
   >
 
 {getAncestors()}
